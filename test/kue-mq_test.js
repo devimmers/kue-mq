@@ -14,8 +14,9 @@ var assert = require('assert'),
     run: function(data, cb) {
       if (data.flag === undefined) {
         data.flag = true;
+      } else {
+        data.flag = !data.flag;
       }
-      data.flag = !data.flag;
       cb(null, data);
     },
     runErrored: function(data, cb) {
