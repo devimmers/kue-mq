@@ -22,6 +22,7 @@ var assert = require('assert'),
     runErrored: function(data, cb) {
       cb('fatal error!');
     },
+    runEmpty: function() {},
     runWithDelay: function(data, cb) {
       setTimeout(function() {
         cb(null, data);
@@ -67,7 +68,6 @@ describe('kue-mq node module.', function() {
         assert.equal(reject.callCount, 0);
         done();
       });
-
   });
 
   it('first server must take reject on error', function(done) {
@@ -75,6 +75,19 @@ describe('kue-mq node module.', function() {
       reject = sinon.spy();
     s1
       .send('test2', 'runErrored', {'foo': 'bar'})
+      .then(resolve, reject)
+      .finally(function() {
+        assert.ok(reject.calledOnce);
+        assert.equal(resolve.callCount, 0);
+        done();
+      });
+  });
+
+  it('first server must take reject on timeout error', function(done) {
+    var resolve = sinon.spy(),
+      reject = sinon.spy();
+    s1
+      .send('test2', 'runEmpty', {'foo': 'bar'})
       .then(resolve, reject)
       .finally(function() {
         assert.ok(reject.calledOnce);
