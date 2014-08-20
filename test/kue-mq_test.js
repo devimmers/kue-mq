@@ -11,6 +11,7 @@ var assert = require('assert'),
   },
   serverMethods = {
     run: function(data, cb) {
+      data.flag = !data.flag || true;
       cb(null, data);
     }
   };
@@ -32,7 +33,34 @@ describe('kue-mq node module.', function() {
       .send('test2', 'run', {'foo': 'bar'})
       .then(function(res) {
         assert(res.foo, 'bar');
+        assert(res.flag, 'bar');
         done();
+      },
+      function(err) {
+        console.error(err);
+        done(err);
+      });
+  });
+
+  it('first server must pipe result through second server', function(done) {
+    s1
+      .send('test2', 'run', {'foo': 'bar'})
+      .then(function(res) {
+        assert(res.foo, 'bar');
+        assert.ok(res.flag);
+        res.foo1 = 'bar1';
+
+        s2
+          .send('test1', 'run', res)
+          .then(function(res) {
+            assert(res.foo1, 'bar1');
+            assert.notStrictEqual(res.flag, true);
+            done();
+          },
+          function(err) {
+            console.error(err);
+            done(err);
+          });
       },
       function(err) {
         console.error(err);
