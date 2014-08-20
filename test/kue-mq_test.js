@@ -135,7 +135,7 @@ describe('kue-mq node module.', function() {
 
     timer = setInterval(function() {
       s1
-        .send('test2', 'runWithDelay', {'foo': 'bar'})
+        .send('test2', 'runWithDelay', {'foo': 'bar'}, {timeout: 11000})
         .then(complite,
           function(err) {
             console.error(err);
