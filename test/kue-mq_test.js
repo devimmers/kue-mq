@@ -12,7 +12,10 @@ var assert = require('assert'),
   },
   serverMethods = {
     run: function(data, cb) {
-      data.flag = !data.flag || true;
+      if (data.flag === undefined) {
+        data.flag = true;
+      }
+      data.flag = !data.flag;
       cb(null, data);
     },
     runErrored: function(data, cb) {
@@ -52,26 +55,31 @@ describe('kue-mq node module.', function() {
       });
   });
 
-  it('first server must take resolve on data', function() {
+  it('first server must take resolve on data', function(done) {
     var resolve = sinon.spy(),
       reject = sinon.spy();
     s1
       .send('test2', 'run', {'foo': 'bar'})
-      .then(reject, resolve);
+      .then(resolve, reject)
+      .finally(function() {
+        assert.ok(resolve.calledOnce);
+        assert.equal(reject.callCount, 0);
+        done();
+      });
 
-    assert.ok(resolve.calledOnce);
-    assert.equal(reject.callCount, 0);
   });
 
-  it('first server must take reject on error', function() {
+  it('first server must take reject on error', function(done) {
     var resolve = sinon.spy(),
       reject = sinon.spy();
     s1
       .send('test2', 'runErrored', {'foo': 'bar'})
-      .then(resolve, reject);
-
-    assert.ok(reject.calledOnce);
-    assert.equal(resolve.callCount, 0);
+      .then(resolve, reject)
+      .finally(function() {
+        assert.ok(reject.calledOnce);
+        assert.equal(resolve.callCount, 0);
+        done();
+      });
   });
 
   it('first server must pipe result through second server', function(done) {
