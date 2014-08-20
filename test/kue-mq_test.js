@@ -13,11 +13,16 @@ var assert = require('assert'),
     run: function(data, cb) {
       data.flag = !data.flag || true;
       cb(null, data);
+    },
+    runWithDelay: function(data, cb) {
+      setTimeout(function() {
+        cb(null, data);
+      }, 100);
     }
   };
 
 describe('kue-mq node module.', function() {
-  var s1, s2;
+  var s1, s2, count = 0;
 
   beforeEach(function() {
     s1 = kueMq(redisConf, 'test1', serverMethods);
@@ -26,6 +31,7 @@ describe('kue-mq node module.', function() {
 
   afterEach(function() {
     s1 = s2 = null;
+    count = 0;
   });
 
   it('first server must take answer from second', function(done) {
@@ -66,5 +72,28 @@ describe('kue-mq node module.', function() {
         console.error(err);
         done(err);
       });
+  });
+
+  it('first server must take answer from second x 100', function(done) {
+    var timer,
+      complite = function(res) {
+        assert(res.foo, 'bar');
+        count++;
+        if (count === 100) {
+          clearTimeout(timer);
+          done();
+        }
+      };
+
+    timer = setInterval(function() {
+      s1
+        .send('test2', 'runWithDelay', {'foo': 'bar'})
+        .then(complite,
+          function(err) {
+            console.error(err);
+            done(err);
+          }
+        );
+    }, 10);
   });
 });
