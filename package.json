@@ -3,13 +3,11 @@
   "version": "0.0.0",
   "main": "lib/kue-mq.js",
   "description": "The best module ever.",
-  
-      "homepage": "https://github.com/Rudeg/kue-mq",
-    
-    "bugs": "https://github.com/Rudeg/kue-mq/issues",
+  "homepage": "https://github.com/Rudeg/kue-mq",
+  "bugs": "https://github.com/Rudeg/kue-mq/issues",
   "author": {
     "name": "Rudeg",
-    "email": "rudenko.sergey92@gmail.com" 
+    "email": "rudenko.sergey92@gmail.com"
   },
   "repository": {
     "type": "git",
@@ -20,10 +18,10 @@
     "lib"
   ],
   "keywords": [
-    "kue-mq"  ,
-        "kue"  ,
-        " redis"  ,
-        " mq" 
+    "kue-mq",
+    "kue",
+    "redis",
+    "mq"
   ],
   "devDependencies": {
     "grunt-contrib-jshint": "^0.10.0",
@@ -32,13 +30,17 @@
     "load-grunt-tasks": "^0.4.0",
     "time-grunt": "^0.3.1",
     "grunt-mocha-cli": "^1.9.0",
-    "jshint-stylish": "^0.2.0" 
+    "jshint-stylish": "^0.2.0"
   },
   "scripts": {
-    "test": "grunt" 
-  }  ,
-      "bin": {
-        "kue-mq": "cli.js"
-    },
-    "preferGlobal": "true" 
+    "test": "grunt"
+  },
+  "bin": {
+    "kue-mq": "cli.js"
+  },
+  "preferGlobal": "true",
+  "dependencies": {
+    "bluebird": "^2.3.0",
+    "kue": "^0.8.5"
+  }
 }
