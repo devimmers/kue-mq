@@ -42,8 +42,8 @@ describe('kue-mq node module.', function() {
     s1
       .send('test2', 'run', {'foo': 'bar'})
       .then(function(res) {
-        assert(res.foo, 'bar');
-        assert(res.flag, 'bar');
+        assert.equal(res.foo, 'bar');
+        assert.ok(res.flag);
         done();
       },
       function(err) {
@@ -57,10 +57,10 @@ describe('kue-mq node module.', function() {
       reject = sinon.spy();
     s1
       .send('test2', 'run', {'foo': 'bar'})
-      .then(resolve, reject);
+      .then(reject, resolve);
 
     assert.ok(resolve.calledOnce);
-    assert(reject.callCount, 0);
+    assert.equal(reject.callCount, 0);
   });
 
   it('first server must take reject on error', function() {
@@ -71,21 +71,21 @@ describe('kue-mq node module.', function() {
       .then(resolve, reject);
 
     assert.ok(reject.calledOnce);
-    assert(resolve.callCount, 0);
+    assert.equal(resolve.callCount, 0);
   });
 
   it('first server must pipe result through second server', function(done) {
     s1
       .send('test2', 'run', {'foo': 'bar'})
       .then(function(res) {
-        assert(res.foo, 'bar');
+        assert.equal(res.foo, 'bar');
         assert.ok(res.flag);
         res.foo1 = 'bar1';
 
         s2
           .send('test1', 'run', res)
           .then(function(res) {
-            assert(res.foo1, 'bar1');
+            assert.equal(res.foo1, 'bar1');
             assert.notStrictEqual(res.flag, true);
             done();
           },
@@ -103,7 +103,7 @@ describe('kue-mq node module.', function() {
   it('first server must take answer from second x 100', function(done) {
     var timer,
       complite = function(res) {
-        assert(res.foo, 'bar');
+        assert.equal(res.foo, 'bar');
         count++;
         if (count === 100) {
           clearTimeout(timer);
