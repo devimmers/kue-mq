@@ -1,6 +1,7 @@
 /*global describe,it,beforeEach,afterEach*/
 'use strict';
 var assert = require('assert'),
+  sinon = require('sinon'),
   kueMq = require('../lib/kue-mq.js'),
   redisConf = {
     prefix: 'q',
@@ -13,6 +14,9 @@ var assert = require('assert'),
     run: function(data, cb) {
       data.flag = !data.flag || true;
       cb(null, data);
+    },
+    runErrored: function(data, cb) {
+      cb('fatal error!');
     },
     runWithDelay: function(data, cb) {
       setTimeout(function() {
@@ -46,6 +50,28 @@ describe('kue-mq node module.', function() {
         console.error(err);
         done(err);
       });
+  });
+
+  it('first server must take resolve on data', function() {
+    var resolve = sinon.spy(),
+      reject = sinon.spy();
+    s1
+      .send('test2', 'run', {'foo': 'bar'})
+      .then(resolve, reject);
+
+    assert.ok(resolve.calledOnce);
+    assert(reject.callCount, 0);
+  });
+
+  it('first server must take reject on error', function() {
+    var resolve = sinon.spy(),
+      reject = sinon.spy();
+    s1
+      .send('test2', 'runErrored', {'foo': 'bar'})
+      .then(resolve, reject);
+
+    assert.ok(reject.calledOnce);
+    assert(resolve.callCount, 0);
   });
 
   it('first server must pipe result through second server', function(done) {
