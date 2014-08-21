@@ -47,21 +47,20 @@ describe('kue-mq node module.', function() {
     s1
       .send('test2', 'run', {'foo': 'bar'})
       .then(function(res) {
-        assert.equal(res.foo, 'bar');
-        assert.ok(res.flag);
+        assert.equal(res.data.foo, 'bar');
+        assert.ok(res.data.flag);
         done();
       });
   });
 
   it('first server must take answer from second check by id', function(done) {
-    var req = s1.send('test2', 'run', {'foo': 'bar'}),
-      jobId = req.job.id;
+    var req = s1.send('test2', 'run', {'foo': 'bar'});
 
     req
-      .then(function(res, job) {
-        assert.equal(res.foo, 'bar');
-        assert.ok(res.flag);
-        assert.equal(job.id, jobId);
+      .then(function(res) {
+        assert.equal(res.data.foo, 'bar');
+        assert.ok(res.data.flag);
+        assert.equal(res.job.id, req.job.id);
         done();
       });
   });
@@ -109,24 +108,23 @@ describe('kue-mq node module.', function() {
     s1
       .send('test2', 'run', {'foo': 'bar'})
       .then(function(res) {
-        assert.equal(res.foo, 'bar');
-        assert.ok(res.flag);
-        res.foo1 = 'bar1';
+        assert.equal(res.data.foo, 'bar');
+        assert.ok(res.data.flag);
+        res.data.foo1 = 'bar1';
 
-        s2
-          .send('test1', 'run', res)
-          .then(function(res) {
-            assert.equal(res.foo1, 'bar1');
-            assert.notStrictEqual(res.flag, true);
-            done();
-          });
+        return s2.send('test1', 'run', res.data);
+      })
+      .then(function(res) {
+        assert.equal(res.data.foo1, 'bar1');
+        assert.notStrictEqual(res.data.flag, true);
+        done();
       });
   });
 
   it('first server must take answer from second x 100', function(done) {
     var timer,
       complite = function(res) {
-        assert.equal(res.foo, 'bar');
+        assert.equal(res.data.foo, 'bar');
         resp++;
         if (resp === 100) {
           done();
