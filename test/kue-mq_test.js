@@ -31,7 +31,7 @@ var assert = require('assert'),
   };
 
 describe('kue-mq node module.', function() {
-  var s1, s2, count = 0;
+  var s1, s2, count = 0, resp = 0;
 
   beforeEach(function() {
     s1 = kueMq(redisConf, 'test1', serverMethods);
@@ -40,7 +40,7 @@ describe('kue-mq node module.', function() {
 
   afterEach(function() {
     s1 = s2 = null;
-    count = 0;
+    count = resp = 0;
   });
 
   it('first server must take answer from second', function(done) {
@@ -126,14 +126,18 @@ describe('kue-mq node module.', function() {
     var timer,
       complite = function(res) {
         assert.equal(res.foo, 'bar');
-        count++;
-        if (count === 100) {
-          clearTimeout(timer);
+        resp++;
+        if (resp === 100) {
           done();
         }
       };
 
     timer = setInterval(function() {
+      if (count === 100) {
+        clearTimeout(timer);
+        return;
+      }
+      count++;
       s1
         .send('test2', 'runWithDelay', {'foo': 'bar'}, {timeout: 11000})
         .then(complite,
