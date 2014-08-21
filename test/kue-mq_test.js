@@ -50,10 +50,19 @@ describe('kue-mq node module.', function() {
         assert.equal(res.foo, 'bar');
         assert.ok(res.flag);
         done();
-      },
-      function(err) {
-        console.error(err);
-        done(err);
+      });
+  });
+
+  it('first server must take answer from second check by id', function(done) {
+    var req = s1.send('test2', 'run', {'foo': 'bar'}),
+      jobId = req.job.id;
+
+    req
+      .then(function(res, job) {
+        assert.equal(res.foo, 'bar');
+        assert.ok(res.flag);
+        assert.equal(job.id, jobId);
+        done();
       });
   });
 
@@ -110,15 +119,7 @@ describe('kue-mq node module.', function() {
             assert.equal(res.foo1, 'bar1');
             assert.notStrictEqual(res.flag, true);
             done();
-          },
-          function(err) {
-            console.error(err);
-            done(err);
           });
-      },
-      function(err) {
-        console.error(err);
-        done(err);
       });
   });
 
@@ -140,12 +141,7 @@ describe('kue-mq node module.', function() {
       count++;
       s1
         .send('test2', 'runWithDelay', {'foo': 'bar'}, {timeout: 11000})
-        .then(complite,
-          function(err) {
-            console.error(err);
-            done(err);
-          }
-        );
+        .then(complite);
     }, 10);
   });
 });
