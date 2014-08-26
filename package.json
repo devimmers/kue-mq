@@ -1,8 +1,8 @@
 {
   "name": "kue-mq",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "lib/kue-mq.js",
-  "description": "The best module ever.",
+  "description": "Kue-mq module",
   "homepage": "https://github.com/Rudeg/kue-mq",
   "bugs": "https://github.com/Rudeg/kue-mq/issues",
   "author": {
@@ -35,9 +35,6 @@
   },
   "scripts": {
     "test": "grunt"
-  },
-  "bin": {
-    "kue-mq": "cli.js"
   },
   "preferGlobal": "true",
   "dependencies": {
