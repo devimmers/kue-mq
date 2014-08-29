@@ -1,26 +1,20 @@
-#  [![Build Status](https://secure.travis-ci.org/Rudeg/kue-mq.png?branch=master)](http://travis-ci.org/Rudeg/kue-mq)
+## Kue-mq
 
-> The best module ever.
+Kue-mq provide MQ interface for kue ( https://github.com/LearnBoost/kue )
 
 
 ## Getting Started
 
 Install the module with: `npm install kue-mq`
 
+[![NPM](https://nodei.co/npm/kue-mq.png?downloads=true&stars=true)](https://nodei.co/npm/kue-mq/)
+
+
 ```js
-var kue-mq = require('kue-mq');
-kue-mq.awesome(); // "awesome"
+var kueMq = require('kue-mq');
+var server = kueMq(redisConf, 'serverName', serverMethods);
+
 ```
-
-Install with cli command
-
-```sh
-$ npm install -g kue-mq
-$ kue-mq --help
-$ kue-mq --version
-```
-
-
 
 
 ## Documentation
