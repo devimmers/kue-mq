@@ -1,17 +1,17 @@
 {
   "name": "kue-mq",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "lib/kue-mq.js",
   "description": "Kue-mq module",
-  "homepage": "https://github.com/Rudeg/kue-mq",
-  "bugs": "https://github.com/Rudeg/kue-mq/issues",
+  "homepage": "https://github.com/devimmers/kue-mq",
+  "bugs": "https://github.com/devimmers/kue-mq/issues",
   "author": {
     "name": "Rudeg",
     "email": "rudenko.sergey92@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Rudeg/kue-mq"
+    "url": "https://github.com/devimmers/kue-mq"
   },
   "license": "MIT",
   "files": [
@@ -38,7 +38,7 @@
   },
   "preferGlobal": "true",
   "dependencies": {
-    "bluebird": "^2.3.0",
-    "kue": "^0.8.5"
+    "bluebird": "^2.3.2",
+    "kue": "^0.8.6"
   }
 }
